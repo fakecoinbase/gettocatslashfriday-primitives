@@ -19,7 +19,7 @@ and getters:
 
 ## Config
 
-```
+```javascript
 {
     validationalert: true,
     genesisMode: false, // genesisMode help make first block
@@ -40,7 +40,7 @@ If transaction/block version is bigger then supported - tx/block fire event unsu
 ## Primitive
 
 Primitive is abstract class, extends with EventEmitter. Some methods in primitive muse be redefined:
-```
+```javascript
 throwError(message, code); //create exception
 getAddressByPublicKey(publicKeyHex); //generate address from public key
 getPublicKeyByPrivateKey(privateKeyHex);//get public key by private key
@@ -68,7 +68,7 @@ Hex buffers creates from json output with apply bitowl protocol https://www.npmj
 
 # json format
 
-```
+```javascript
 {
     v: 'int-supported-tx-version',
     s: //signature data
@@ -100,7 +100,7 @@ Hex buffers creates from json output with apply bitowl protocol https://www.npmj
 ```
 
 coinbase tx:
-```
+```javascript
 {
     v: 'int-supported-tx-version',
     s: //signature data
@@ -128,48 +128,52 @@ coinbase tx:
 
 # methods
 
-setters: 
-`setVersion(ver)`
-`setInputs(arr)`
-`setOutputs(arr)`
+```javascript
+//setters: 
+setVersion(ver)
+setInputs(arr)
+setOutputs(arr)
 
-for coinbase: 
-`setMerkle(merkle)`
-`setPublicKey(key)` 
-`setCoinbase(coinbaseData)` 
+//for coinbase: 
+setMerkle(merkle)
+setPublicKey(key)
+setCoinbase(coinbaseData)
 
-serialization: 
-`toJSON()`
-`fromJSON(jsondata)`
-`toHex()`
-`toBuffer()`
-`fromHex(hexOrBufferdata)`
+//serialization: 
+toJSON()
+fromJSON(jsondata)
+toHex()
+toBuffer()
+fromHex(hexOrBufferdata)
 
-additional:
-`setKeystore(keystore)` - keystore is array of privatekeyhex, using for sign tx
-`setData(data)` - additional data of tx (look https://github.com/gettocat/orwelldb) for more details
+//additional:
+setKeystore(keystore) // keystore is array of privatekeyhex, using for sign tx
+setData(data) // additional data of tx (look https://github.com/gettocat/orwelldb) for more details
 
-getters:
-`getId()`
-`getHash()`
-`getFee()`
-`getSize()`
-`isCoinbase()`
-`getInputs()`
-`getOutputs()`
+//getters:
+getId()
+getHash()
+getFee()
+getSize()
+isCoinbase()
+getInputs()
+getOutputs()
 
-`isValid(context)` - execute validator rules on current tx
-`getLastErrorCodes()` - validation errors
-`signTransaction(private_keys)` - sign tx with private_keys, if private_keys is not defined - try use keystore params 
-`verifyTransaction()` - verify signs of tx (return true if ok, and throw exception if not okay)
+isValid(context) // execute validator rules on current tx
+getLastErrorCodes() // validation errors
+signTransaction(private_keys) // sign tx with private_keys, if private_keys is not defined - try use keystore params 
+verifyTransaction() // verify signs of tx (return true if ok, and throw exception if not okay)
+```
 
 # static methods:
-`TX.createFromJSON(jsondata, private_keys)` - create from json and sign with private_keys
-`TX.createFromRaw(inputs, outputs, keys, version, ds, coinbaseData)` 
-`TX.createCoinbase(fee, coinbaseBytes, privateKey, merkle, height)` - create coinbase tx
-`TX.fromJSON(jsondata)`
-`TX.fromHEX(hexOrBuffer)`
-`TX.validate(tx, context)`
+```javascript
+TX.createFromJSON(jsondata, private_keys) // create from json and sign with private_keys
+TX.createFromRaw(inputs, outputs, keys, version, ds, coinbaseData) 
+TX.createCoinbase(fee, coinbaseBytes, privateKey, merkle, height) // create coinbase tx
+TX.fromJSON(jsondata)
+TX.fromHEX(hexOrBuffer)
+TX.validate(tx, context)
+```
 
 # additional
 TX.VALIDATOR - validator class, have method:
@@ -186,7 +190,7 @@ Hex buffers creates from json output with apply bitowl protocol https://www.npmj
 
 # json format
 
-```
+```javascript
 {
     v: 'current-block-version-int',
     p: 'previous-block-hash',
@@ -194,56 +198,56 @@ Hex buffers creates from json output with apply bitowl protocol https://www.npmj
     t: 'block timestamp',
     b: 'additional info',
     n: 'additional info 2',
-    tx: [txjson1,txjson2] //array with tx
+    tx: [txjson1,txjson2,...] //array with tx
 }
 ```
 
 # methods
+```javascript
+//add tx to block:
+addTxFromHEX(hex)
+addTxFromJSON(json)
+addTx(tx)
+addTxList(HEXorJSONorTXObjectArr) // add tx from any types of serialization
 
-add tx to block:
-`addTxFromHEX(hex)`
-`addTxFromJSON(json)`
-`addTx(tx)`
-`addTxList(HEXorJSONorTXObjectArr)` - add tx from any types of serialization
+//serialization:
+toHex()
+toBuffer()
+fromHex(hex)
+toJSON()
+fromJSON(json)
 
-serialization:
-`toHex()`
-`toBuffer()`
-`fromHex(hex)`
-`toJSON()`
-`fromJSON(json)`
+//validation:
+getLastErrorCodes()
+isValid(context)
 
-validation:
-`getLastErrorCodes()`
-`isValid(context)`
+//getters:
+getId()
+getVersion()
+getBits()
+getPrevId()
+getTime()
+getNonce()
+getHash()
 
-getters:
-`getId()`
-`getVersion()`
-`getBits()`
-`getPrevId()`
-`getTime()`
-`getNonce()`
-`getHash()`
+//txinfo:
+getFee()
+getSize()
 
-
-txinfo:
-`getFee()`
-`getSize()`
-
-header info:
-`getHeader()`
-`getHeaderBytes()`
-`getHeaderHex()`
-
+//header info:
+getHeader()
+getHeaderBytes()
+getHeaderHex()
+```
 
 # static methods
-
-`BLOCK.fromJSON(jsondata)`
-`BLOCK.fromHEX(hexdata)`
-`BLOCK.validate(block, context)`
-`BLOCK.generateNewBlockTemplate(timestamp, coinbaseBytes, keystore, currentValidatorsMerkle) ` - creates new block template (json) with coinbase. keystore format is `{public:'hex', private: 'hex'}`
-`BLOCK.createNewBlock = (coinbaseBytes, keystore, currentValidatorsMerkle)` - creates new block with coinbase and mempool info
+```javascript
+BLOCK.fromJSON(jsondata)
+BLOCK.fromHEX(hexdata)
+BLOCK.validate(block, context)
+BLOCK.generateNewBlockTemplate(timestamp, coinbaseBytes, keystore, currentValidatorsMerkle)  // creates new block template (json) with coinbase. keystore format is {public:'hex', private: 'hex'}
+BLOCK.createNewBlock = (coinbaseBytes, keystore, currentValidatorsMerkle) // creates new block with coinbase and mempool info
+```
 
 # additional
 BLOCK.VALIDATOR - validator class, have method:
