@@ -1,34 +1,37 @@
 {
-    "name": "@nanocat/friday-serialized",
-    "version": "0.0.1",
-    "description": "Tx, Block and other data defenition for friday framework",
-    "main": "index.js",
-    "repository": "https://github.com/gettocat/friday-serialized",
-    "homepage": "https://github.com/gettocat/friday-serialized",
-    "keywords": [
-        "consensus",
-        "pos",
-        "proofofstake",
-        "delegates",
-        "dpos",
-        "democracy",
-        "validators"
-    ],
-    "dependencies": {
-        "bitowl": "^0.0.2"
-    },
-    "author": {
-        "name": "Nanocat <gettocat@github.com>",
-        "email": "alex@letris.ru"
-    },
-    "license": "MIT",
-    "devDependencies": {
-        "elliptic": "^6.5.2",
-        "hash.js": "^1.1.7",
-        "base-58": "^0.0.1",
-        "merkle-tools": "^1.4.0"
-    },
-    "bugs": {
-        "url": "https://github.com/gettocat/friday-serialized/issues"
-    }
+  "name": "@friday/friday-serialized",
+  "version": "0.0.1",
+  "description": "Tx, Block and other data defenition for friday framework",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gettocat/friday-serialized.git"
+  },
+  "homepage": "https://github.com/gettocat/friday-serialized",
+  "keywords": [
+    "consensus",
+    "pos",
+    "proofofstake",
+    "delegates",
+    "dpos",
+    "democracy",
+    "validators"
+  ],
+  "dependencies": {
+    "bitowl": "^0.0.2"
+  },
+  "author": "Nanocat <gettocat@github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "elliptic": "^6.5.2",
+    "hash.js": "^1.1.7",
+    "base-58": "^0.0.1",
+    "merkle-tools": "^1.4.0"
+  },
+  "bugs": {
+    "url": "https://github.com/gettocat/friday-serialized/issues"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
