@@ -198,7 +198,7 @@ module.exports = (app) => {
         }
         isValid(context) {
             this.emit("beforevalidation", context);
-            let validator = new block.VALIDATOR(this, context);
+            let validator = new app.BLOCK.VALIDATOR(this, context);
             let res = validator.isValid();
             if (!res)
                 this.validation_errors = validator.getErrors();
@@ -232,14 +232,14 @@ module.exports = (app) => {
     }
 
     block.fromJSON = (data) => {
-        if (data instanceof block)
+        if (data instanceof app.BLOCK)
             return data;
 
-        return (new block()).fromJSON(data);
+        return (new app.BLOCK()).fromJSON(data);
     }
 
     block.fromHEX = (hex) => {
-        return (new block()).fromHex(hex);
+        return (new app.BLOCK()).fromHex(hex);
     }
 
     block.validate = (block, context) => {
@@ -247,7 +247,7 @@ module.exports = (app) => {
     }
 
     block.generateNewBlockTemplate = (timestamp, coinbaseBytes, keystore, currentValidatorsMerkle) => {
-        let mempool = new block().getMemPool();
+        let mempool = new app.BLOCK().getMemPool();
         let fee = 0;
         let txlist = [];
         for (let i in mempool) {
@@ -255,7 +255,7 @@ module.exports = (app) => {
             txlist.push(mempool[i]);
         }
 
-        let latest = new block().getTop();
+        let latest = new app.BLOCK().getTop();
         if (app.config.genesisMode)
             latest = { height: -1, id: '0000000000000000000000000000000000000000000000000000000000000000' };
 
@@ -281,7 +281,7 @@ module.exports = (app) => {
         if (!currentValidatorsMerkle)
             throw new Error('can not create new block without current validators merkle');
 
-        return new block().fromJSON(block.generateNewBlockTemplate(new block().getCurrentTime(), coinbaseBytes, keystore, currentValidatorsMerkle));
+        return new app.BLOCK().fromJSON(block.generateNewBlockTemplate(new app.BLOCK().getCurrentTime(), coinbaseBytes, keystore, currentValidatorsMerkle));
     }
 
     class validator {

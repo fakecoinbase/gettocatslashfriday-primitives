@@ -253,7 +253,7 @@ module.exports = (app) => {
         }
         isValid(context) {
             this.emit("beforevalidation", context);
-            let validator = new TX.VALIDATOR(this, context);
+            let validator = new app.TX.VALIDATOR(this, context);
             let res = validator.isValid();
             if (!res)
                 this.validation_errors = validator.getErrors();
@@ -351,7 +351,7 @@ module.exports = (app) => {
         if (!(data.out instanceof Array) || data.out.length < 1)
             throw new Error("at least one input must be in tx.out");
 
-        return TX.createFromRaw(data.in, data.out, keys, data.v, data.ds, {
+        return app.TX.createFromRaw(data.in, data.out, keys, data.v, data.ds, {
             merkle: data.m,
             key: data.k,
             coinbase: data.cb
@@ -359,7 +359,7 @@ module.exports = (app) => {
     }
 
     TX.createFromRaw = function (inputs, outputs, keys, version, ds, coinbaseData) {
-        let tx = new TX();
+        let tx = new app.TX();
 
         if (!version)
             version = 1;
@@ -387,7 +387,7 @@ module.exports = (app) => {
         if (!fee)
             fee = 0;
 
-        let temp = new TX();
+        let temp = new app.TX();
         return TX.createFromJSON({
             v: app.config.txversion,
             out: [
@@ -400,11 +400,11 @@ module.exports = (app) => {
     }
 
     TX.fromJSON = function (data) {
-        return new TX().fromJSON(data);
+        return new app.TX().fromJSON(data);
     }
 
     TX.fromHEX = function (hex) {
-        return new TX(hex);
+        return new app.TX(hex);
     }
 
     TX.validate = function (tx, context) {
