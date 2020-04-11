@@ -177,7 +177,7 @@ module.exports = (app) => {
 
             for (let i in this.tx) {
                 if (this.tx[i])
-                    o.tx.push(this.tx[i].toJSON(rule));
+                    o.tx.push(this.tx[i].toJSON(rules));
             }
 
             return o;
