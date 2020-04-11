@@ -130,7 +130,10 @@ module.exports = (app) => {
         setCoinbase(coinbaseData) {
             this.coinbase = coinbaseData;
         }
-        toJSON() {
+        toJSON(rules) {
+
+            if (!rules)
+                rules = [];
 
             let in_ = [];
             for (let i in this.inputs) {
@@ -144,6 +147,10 @@ module.exports = (app) => {
                 s: this.signdata,
                 in: in_,
                 out: this.outputs
+            }
+
+            if (rules.split(",").indexOf('hash') != -1){
+                o.hash = this.getId();
             }
 
             if (this.coinbase) {

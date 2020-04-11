@@ -156,7 +156,10 @@ module.exports = (app) => {
             this.init();
             return this;
         }
-        toJSON() {
+        toJSON(rules) {
+            if (!rules)
+                rules = "";
+
             let o = {
                 v: this.version,
                 p: this.prev,
@@ -168,9 +171,13 @@ module.exports = (app) => {
                 ]
             }
 
+            if (rules.split(",").indexOf('hash') != -1) {
+                o.hash = this.getId();
+            }
+
             for (let i in this.tx) {
                 if (this.tx[i])
-                    o.tx.push(this.tx[i].toJSON());
+                    o.tx.push(this.tx[i].toJSON(rule));
             }
 
             return o;
