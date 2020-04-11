@@ -219,11 +219,14 @@ module.exports = (app) => {
                         throw new Error('Signature for input [' + i + '] doesnt exist');
             }
 
-            return bitowl.data.pack(this.toJSON());
+            let d = this.toJSON();
+            if (action == 'verify')
+                delete d.s;//sign is not part of txhash
+            return bitowl.data.pack(d);
         }
         getId(forse) {
             if (!this.hash || forse) {
-                this.hash = this.createHash(this.toBuffer()).toString('hex');
+                this.hash = this.createHash(this.toBuffer('verify')).toString('hex');
             }
 
             return this.hash;
@@ -271,23 +274,15 @@ module.exports = (app) => {
             if (!private_keys || (!private_keys instanceof Array) || private_keys.length < this.inputs.length)
                 throw new Error('Invalid keystore length, must be >=' + this.inputs.length + ' keys');
 
-            for (let i in this.inputs) {
-                this.signdata[i] = [];
-            }
-
             let siglist = [];
+            let txb = this.toBuffer('verify'),
+                hash = this.createHash(txb);
+
             for (let i in this.inputs) {
-                this.signdata[i] = 1;
-
-                let txb = this.toBuffer(),
-                    hash = this.createHash(txb);
-
                 siglist[i] = [
                     this.sign(private_keys[i], new Buffer(hash, 'hex')).toString('hex'),
                     this.getPublicKeyByPrivateKey(private_keys[i])
                 ];
-
-                this.signdata[i] = [];
             }
 
             this.signdata = siglist;
@@ -295,25 +290,15 @@ module.exports = (app) => {
         }
         verifyTransaction() {
             let res = [];
-            let signdata = [];
+            let signable = this.toBuffer('verify');
+            let hash2sign = this.createHash(new Buffer(signable, 'hex'));
 
             for (let i in this.inputs) {
-                signdata[i] = this.signdata[i];
-                this.signdata[i] = [];
-            }
-
-            for (let i in this.inputs) {
-                this.signdata[i] = 1;
-                let pubkey = signdata[i][1];
-                let sign = signdata[i][0];
-                let signable = this.toBuffer('verify');
-                let hash2sign = this.createHash(new Buffer(signable, 'hex'));
+                let pubkey = this.signdata[i][1];
+                let sign = this.signdata[i][0];
                 res[i] = this.verify(pubkey, sign, new Buffer(hash2sign, 'hex'));
                 //sometimes one of signs in big tx - can not be verified - so, its thrown error, TODO: check EC and find this bug (signs and messagehash is equal)
-                this.signdata[i] = [];
             }
-
-            this.signdata = signdata;
 
             let result = true;
             for (let i in res) {

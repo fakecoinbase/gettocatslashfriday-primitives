@@ -62,8 +62,8 @@ app.definePrimitive((() => {//Primitive - abstract class with important methods,
 
 app.defineTx((() => {
     class Tx2 extends app.TX {
-        constructor() {
-            super();
+        constructor(data) {
+            super(data);
         }
         //TX::send must be reimplemented   
         checkVersion() {
@@ -76,8 +76,8 @@ app.defineTx((() => {
 
 app.defineBlock((() => {
     class Block2 extends app.BLOCK {
-        constructor() {
-            super();
+        constructor(data) {
+            super(data);
         }
         //BLOCK::send must be reimplemented
         checkVersion() {
@@ -160,8 +160,6 @@ let tx5 = tx.createFromJSON({
 
 let tx6 = tx.fromHEX(tx5.toHex());
 console.log('tohex/fromhex', JSON.stringify(tx5.toJSON()) == JSON.stringify(tx6.toJSON()));
-
-
 let tx7 = tx.fromJSON(tx5.toJSON());
 console.log('tojson/fromjson', tx7.toHex() == tx5.toHex());
 
