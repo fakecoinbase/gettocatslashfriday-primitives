@@ -133,7 +133,7 @@ module.exports = (app) => {
         toJSON(rules) {
 
             if (!rules)
-                rules = [];
+                rules = "";
 
             let in_ = [];
             for (let i in this.inputs) {
@@ -149,7 +149,7 @@ module.exports = (app) => {
                 out: this.outputs
             }
 
-            if (rules.split(",").indexOf('hash') != -1){
+            if (rules.split(",").indexOf('hash') != -1) {
                 o.hash = this.getId();
             }
 
@@ -162,7 +162,11 @@ module.exports = (app) => {
 
             return o;
         }
-        fromJSON(jsondata) {
+        fromJSON(jsondata, additionalInfoRulesArray) {
+
+            if (!additionalInfoRulesArray)
+                additionalInfoRulesArray = [];
+
             this.type = 'json';
             this.setVersion(jsondata.v);
             this.signdata = jsondata.s;
@@ -179,6 +183,10 @@ module.exports = (app) => {
 
                 if (!jsondata.in)
                     this.setInputs([{ index: -1 }]);
+            }
+
+            for (let i in additionalInfoRulesArray){
+                this[additionalInfoRulesArray[i]] = jsondata[additionalInfoRulesArray[i]];
             }
 
             this.init();

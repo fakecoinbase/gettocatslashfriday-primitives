@@ -1,6 +1,6 @@
 {
   "name": "@nanocat/friday-serialized",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Tx, Block and other data defenition for friday framework",
   "main": "index.js",
   "repository": {

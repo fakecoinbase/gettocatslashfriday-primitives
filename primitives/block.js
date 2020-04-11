@@ -182,7 +182,11 @@ module.exports = (app) => {
 
             return o;
         }
-        fromJSON(json) {
+        fromJSON(json, additionalInfoRulesArray) {
+
+            if (!additionalInfoRulesArray)
+                additionalInfoRulesArray = [];
+
             this.type = 'json';
             if (typeof json.b == 'string')
                 json.b = parseInt(json.b, 16);
@@ -195,8 +199,12 @@ module.exports = (app) => {
             this.bits = json.b;
             this.nonce = json.n;
 
+            for (let i in additionalInfoRulesArray){
+                this[additionalInfoRulesArray[i]] = json[additionalInfoRulesArray[i]];
+            }
+
             for (let i in json.tx) {
-                let t = app.TX.fromJSON(json.tx[i])
+                let t = app.TX.fromJSON(json.tx[i], additionalInfoRulesArray)
                 this.tx.push(t);
             }
 
