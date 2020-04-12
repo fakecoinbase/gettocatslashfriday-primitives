@@ -296,7 +296,7 @@ module.exports = (app) => {
         if (!currentValidatorsMerkle)
             throw new Error('can not create new block without current validators merkle');
 
-        return new app.BLOCK().fromJSON(block.generateNewBlockTemplate(new app.BLOCK().getCurrentTime(), coinbaseBytes, keystore, currentValidatorsMerkle));
+        return new app.BLOCK().fromJSON(app.BLOCK.generateNewBlockTemplate(new app.BLOCK().getCurrentTime(), coinbaseBytes, keystore, currentValidatorsMerkle));
     }
 
     class validator {
