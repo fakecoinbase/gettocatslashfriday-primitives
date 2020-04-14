@@ -123,7 +123,7 @@ module.exports = (app) => {
                 a += this.tx[i].getSize();
             }
 
-            let txsize = Math.ceil(tx.length.toString(16).length) / 2;//can be %2 != 0, first digit!
+            let txsize = Math.ceil(this.tx.length.toString(16).length) / 2;//can be %2 != 0, first digit!
             a += getHeaderBytes().length + 5 + txsize;//bitowl notation - tx: [] 0102TTXX05(SIZEOFLENGTH) type|key(var_str)|value, value is array: value.length|value[0],...,value[n]
 
             return a;
