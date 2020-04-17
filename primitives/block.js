@@ -13,7 +13,6 @@ module.exports = (app) => {
             this.time = 0;
             this.bits = 0;
             this.nonce = 0;
-            this.index = 0;
             this.tx = [];
 
             this.hex = '';
@@ -191,7 +190,6 @@ module.exports = (app) => {
             if (typeof json.b == 'string')
                 json.b = parseInt(json.b, 16);
 
-            this.height = json.h;
             this.version = json.v;
             this.prev = json.p;
             this.merkle = json.m;
