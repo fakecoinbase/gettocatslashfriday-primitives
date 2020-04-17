@@ -108,7 +108,7 @@ module.exports = (app) => {
             return this;
         }
         setOutputs(arr) {
-
+            let out = [];
             for (let i in arr) {
 
                 if (arr[i].address) {
@@ -116,9 +116,17 @@ module.exports = (app) => {
                         throw new Error('invalid address field for tx.out[' + i + ']');
                 }
 
-                this.outputs[i] = arr[i];
-            }
+                let o = {
+                    amount: arr[i].amount,
+                    address: arr[i].address,
+                }
 
+                if (arr[i].key)
+                    o.key = arr[i].key;
+
+                out.push(o);
+            }
+            this.outputs = out;
             return this;
         }
         setMerkle(merkle) {
@@ -142,11 +150,24 @@ module.exports = (app) => {
                     delete in_[i].prevAddress;
             }
 
+            let outs_ = [];
+            for (let i in this.outputs) {
+                let temp = {
+                    address: this.outputs[i].address,
+                    amount: this.outputs[i].amount,
+                }
+
+                if (this.outputs[i].key && this.coinbase)
+                    temp.key = this.outputs[i].key;
+
+                outs_.push(temp);
+            }
+
             let o = {
                 v: this.version,
                 s: this.signdata,
                 in: in_,
-                out: this.outputs
+                out: outs_
             }
 
             if (rules.split(",").indexOf('hash') != -1) {
@@ -185,7 +206,7 @@ module.exports = (app) => {
                     this.setInputs([{ index: -1 }]);
             }
 
-            for (let i in additionalInfoRulesArray){
+            for (let i in additionalInfoRulesArray) {
                 this[additionalInfoRulesArray[i]] = jsondata[additionalInfoRulesArray[i]];
             }
 
@@ -383,17 +404,18 @@ module.exports = (app) => {
         return tx;
     }
 
-    TX.createCoinbase = function (fee, coinbaseBytes, privateKey, merkle, height) {
+    TX.createCoinbase = function (fee, coinbaseBytes, privateKey, validatorsList, height) {
         if (!fee)
             fee = 0;
 
         let temp = new app.TX();
+        let fullamount = temp.getBlockValue(fee, height + 1);
+        let outs = temp.createCoinbaseOutputs(privateKey, fullamount, validatorsList);
+
         return TX.createFromJSON({
             v: app.config.txversion,
-            out: [
-                { address: temp.getAddressByPublicKey(temp.getPublicKeyByPrivateKey(privateKey)), amount: temp.getBlockValue(fee, height + 1) }
-            ],
-            m: merkle,
+            out: outs,
+            m: temp.createMerkle(validatorsList),
             k: temp.getPublicKeyByPrivateKey(privateKey),
             cb: new Buffer(coinbaseBytes, 'hex').toString('hex')
         }, [privateKey]);

@@ -19,10 +19,10 @@ class Primitive extends EventEmitter {
     isValidAddress(address) {
         throw new Error('PRIMITIVE::isValidAddress must be implemented');
     }
-    addressToHexValue(address){
+    addressToHexValue(address) {
         throw new Error('PRIMITIVE::addressToHexValue must be implemented');
     }
-    hexValueToAddress(hex){
+    hexValueToAddress(hex) {
         throw new Error('PRIMITIVE::hexValueToAddress must be implemented');
     }
     createHash(binaryOrHex) {
@@ -48,6 +48,31 @@ class Primitive extends EventEmitter {
     }
     getCurrentTime() {
         return parseInt(Date.now() / 1000)
+    }
+    createMerkle(list){
+        throw new Error('PRIMITIVE::createMerkle must be implemented');
+    }
+    createCoinbaseOutputs(privateKey, fullamount, validators) {
+        let currnode = this.getPublicKeyByPrivateKey(privateKey);
+        let outs = [
+
+        ];
+
+        let lessamount = fullamount * .05;
+        for (let i in validators) {
+            let am = lessamount / (validators.length - 1);
+            if (validators[i] == currnode)
+                am = fullamount * .95;
+
+            outs.push({
+                key: validators[i],
+                address: this.getAddressByPublicKey(validators[i]),
+                amount: am
+            });
+
+        }
+
+        return outs;
     }
 }
 

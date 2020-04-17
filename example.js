@@ -55,6 +55,9 @@ app.definePrimitive((() => {//Primitive - abstract class with important methods,
         getTop() {//get top info (last block and curr height)
             return { height: -1, id: '0000000000000000000000000000000000000000000000000000000000000000' }
         }
+        createMerkle(list){
+            return tools.merkle(list)
+        }
     }
 
     return Privitive2;
@@ -108,7 +111,7 @@ let tx1 = tx.createFromJSON({
 console.log('build tx', tx1.toJSON());
 
 //build coinbase
-let coinbase = tx.createCoinbase(0.01, "001133", "6e393b0abedbadf29e838ed7ae48c027b30b4d257903a1b5bcb544a19bde9ec6", tools.merkle(["11", "22", "33"]), 0);
+let coinbase = tx.createCoinbase(0.01, "001133", "6e393b0abedbadf29e838ed7ae48c027b30b4d257903a1b5bcb544a19bde9ec6", ["11", "22", "33"], 0);
 console.log('build coinbase', coinbase.toJSON());
 
 //to json/from json
@@ -184,7 +187,7 @@ let keystore5 = {
     private:
         '1555c17c8d0b3a351a0b4e992b458793ed8f4fbf05dcb79bc1b81ff08d323732'
 };
-let b = block.createNewBlock("001122", keystore5, tools.merkle(['00', '11', '22']));
+let b = block.createNewBlock("001122", keystore5, ['00', '11', '22']);
 b.addTx(tx8);
 
 //to json/from json

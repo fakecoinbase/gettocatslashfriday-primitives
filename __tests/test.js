@@ -55,6 +55,9 @@ app.definePrimitive((() => {
         getTop() {
             return { height: -1, id: '0000000000000000000000000000000000000000000000000000000000000000' }
         }
+        createMerkle(list){
+            return tools.merkle(list)
+        }
     }
 
     return Privitive2;
@@ -174,7 +177,7 @@ block.VALIDATOR.addRule('test', (validator) => {//context - tx object, validator
 
 //block create new
 let keystore = tools.createKeyPair();
-let b = block.createNewBlock("001122", keystore, tools.merkle(['00', '11', '22']));
+let b = block.createNewBlock("001122", keystore, ['00', '11', '22']);
 b.addTx(tx5);
 
 let b2 = block.fromHEX(b.toHex());

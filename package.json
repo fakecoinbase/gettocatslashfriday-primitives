@@ -1,6 +1,6 @@
 {
   "name": "@nanocat/friday-serialized",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Tx, Block and other data defenition for friday framework",
   "main": "index.js",
   "repository": {
@@ -18,15 +18,15 @@
     "validators"
   ],
   "dependencies": {
-    "bitowl": "^0.0.2"
+    "bitowl": "^0.0.2",
+    "merkle-tools": "^1.4.0"
   },
   "author": "Nanocat <gettocat@github.com>",
   "license": "MIT",
   "devDependencies": {
     "elliptic": "^6.5.2",
     "hash.js": "^1.1.7",
-    "base-58": "^0.0.1",
-    "merkle-tools": "^1.4.0"
+    "base-58": "^0.0.1"
   },
   "bugs": {
     "url": "https://github.com/gettocat/friday-serialized/issues"

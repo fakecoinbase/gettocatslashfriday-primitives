@@ -261,7 +261,7 @@ module.exports = (app) => {
         return block.isValid(context);
     }
 
-    block.generateNewBlockTemplate = (timestamp, coinbaseBytes, keystore, currentValidatorsMerkle) => {
+    block.generateNewBlockTemplate = (timestamp, coinbaseBytes, keystore, currentValidators) => {
         let mempool = new app.BLOCK().getMemPool();
         let fee = 0;
         let txlist = [];
@@ -274,7 +274,7 @@ module.exports = (app) => {
         if (app.config.genesisMode)
             latest = { height: -1, id: '0000000000000000000000000000000000000000000000000000000000000000' };
 
-        let coinbase = app.TX.createCoinbase(fee, coinbaseBytes, keystore.private, currentValidatorsMerkle, latest.height);
+        let coinbase = app.TX.createCoinbase(fee, coinbaseBytes, keystore.private, currentValidators, latest.height);
         txlist.unshift(coinbase.toJSON());
 
         return {
@@ -289,14 +289,14 @@ module.exports = (app) => {
 
     }
 
-    block.createNewBlock = (coinbaseBytes, keystore, currentValidatorsMerkle) => {
+    block.createNewBlock = (coinbaseBytes, keystore, currentValidators) => {
         if (!keystore)
             throw new Error('can not create new block without keystore');
 
-        if (!currentValidatorsMerkle)
-            throw new Error('can not create new block without current validators merkle');
+        if (!currentValidators)
+            throw new Error('can not create new block without current validators list');
 
-        return new app.BLOCK().fromJSON(app.BLOCK.generateNewBlockTemplate(new app.BLOCK().getCurrentTime(), coinbaseBytes, keystore, currentValidatorsMerkle));
+        return new app.BLOCK().fromJSON(app.BLOCK.generateNewBlockTemplate(new app.BLOCK().getCurrentTime(), coinbaseBytes, keystore, currentValidators));
     }
 
     class validator {
