@@ -187,9 +187,6 @@ module.exports = (app) => {
                 additionalInfoRulesArray = [];
 
             this.type = 'json';
-            if (typeof json.b == 'string')
-                json.b = parseInt(json.b, 16);
-
             this.version = json.v;
             this.prev = json.p;
             this.merkle = json.m;
@@ -280,8 +277,8 @@ module.exports = (app) => {
             p: latest.id,
             h: latest.height + 1,
             t: timestamp,
-            n: 0,
-            b: 0,
+            n: currentValidators.indexOf(keystore.public),
+            b: currentValidators.length,
             tx: txlist
         };
 
