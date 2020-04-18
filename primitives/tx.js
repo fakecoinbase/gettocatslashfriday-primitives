@@ -244,7 +244,7 @@ module.exports = (app) => {
                 }
                 dsc = dscript.writeArray(scriptslist);
             } else
-                dsc = this.datascripts;
+                dsc = data;
 
             this.data = dsc;
             return this;
