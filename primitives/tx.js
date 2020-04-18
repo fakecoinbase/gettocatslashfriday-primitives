@@ -174,6 +174,10 @@ module.exports = (app) => {
                 o.hash = this.getId();
             }
 
+            if (this.data){
+                o.ds = this.data;
+            }
+
             if (this.coinbase) {
                 o.cb = this.coinbase;
                 o.m = this.merkle;
@@ -195,7 +199,7 @@ module.exports = (app) => {
             this.setOutputs(jsondata.out);
 
             if (jsondata.ds)
-                this.setData(ds);
+                this.setData(jsondata.ds);
 
             if (jsondata.cb) {
                 this.setCoinbase(jsondata.cb);
