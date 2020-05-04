@@ -59,22 +59,6 @@ module.exports = (app) => {
             this.size = this.hex.length;
             this.fee = 0;
 
-            if (!this.coinbase) {
-                let outval = 0, inval = 0;
-                for (let i in this.inputs) {
-                    if (this.inputs[i].hash && this.inputs[i].index != -1) {//not a coinbase
-                        let out = this.getOut(this.inputs[i].hash, this.inputs[i].index);
-                        inval += out.amount;
-                    }
-                }
-
-                for (let i in this.outputs) {
-                    outval += this.outputs[i].amount;
-                }
-
-                this.fee = inval - outval;
-            }
-
             if (this.version > app.config.txversion) {
                 this.emit("unsupportedversion", app.config.txversion, this.version);
             }//else is okay
@@ -174,7 +158,7 @@ module.exports = (app) => {
                 o.hash = this.getId();
             }
 
-            if (this.data){
+            if (this.data) {
                 o.ds = this.data;
             }
 
@@ -276,6 +260,21 @@ module.exports = (app) => {
         }
         getFee() {
             //calculate fee
+            if (!this.coinbase && !this.fee) {
+                let outval = 0, inval = 0;
+                for (let i in this.inputs) {
+                    if (this.inputs[i].hash && this.inputs[i].index != -1) {//not a coinbase
+                        let out = this.getOut(this.inputs[i].hash, this.inputs[i].index);
+                        inval += out.amount;
+                    }
+                }
+
+                for (let i in this.outputs) {
+                    outval += this.outputs[i].amount;
+                }
+
+                this.fee = inval - outval;
+            }
             return this.fee;
         }
         getSize() {
@@ -297,9 +296,14 @@ module.exports = (app) => {
         isValid(context) {
             this.emit("beforevalidation", context);
             let validator = new app.TX.VALIDATOR(this, context);
+            console.log('created validator');
             let res = validator.isValid();
+            console.log('exec validator', res);
+
             if (!res)
                 this.validation_errors = validator.getErrors();
+
+            console.log('validator', this.validation_errors);
             this.emit("aftervalidation", res, validator.getLog(), validator.getErrors());
             return res;
         }
