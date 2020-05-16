@@ -296,14 +296,11 @@ module.exports = (app) => {
         isValid(context) {
             this.emit("beforevalidation", context);
             let validator = new app.TX.VALIDATOR(this, context);
-            console.log('created validator');
             let res = validator.isValid();
-            console.log('exec validator', res);
-
             if (!res)
                 this.validation_errors = validator.getErrors();
 
-            console.log('validator', this.validation_errors);
+            console.log('validator errors', this.validation_errors);
             this.emit("aftervalidation", res, validator.getLog(), validator.getErrors());
             return res;
         }
